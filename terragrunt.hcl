@@ -7,34 +7,42 @@
 #   These are convenient aliases visible only within this file, per
 #     https://terragrunt.gruntwork.io/docs/features/locals/#locals
 locals {
-  # declare a name for the app
+  # Declare a name for the app.
+  #
   # This must be a globally unique name since it is used to name
   # the S3 bucket and DynamoDB table that manages Terraform state for this app.
   app_id = "pwyvpcpeeringtest"
 
   # Environment variables
   environment_vars = read_terragrunt_config(find_in_parent_folders("env.hcl"))
-  environment = local.environment_vars.locals.environment
+  #environment = local.environment_vars.locals.environment
 
   # Region-level variables
   region_vars = read_terragrunt_config(find_in_parent_folders("region.hcl"))
+  #
+  # Used in this file for the default AWS Provider
   aws_region = local.region_vars.locals.aws_region
 
   # Cloud-level variables
-  #cloud_vars = read_terragrunt_config(find_in_parent_folders("cloud.hcl"))
+  cloud_vars = read_terragrunt_config(find_in_parent_folders("cloud.hcl"))
   #cloud = local.cloud_vars.locals.cloud
 
   account_vars = read_terragrunt_config(find_in_parent_folders("account.hcl"))
-  account_name = local.account_vars.locals.account_name
-  account_id   = local.account_vars.locals.aws_account_id
+  #account_name = local.account_vars.locals.account_name
+  #
+  # compared in this file against 'allowed_account_ids'
+  account_id = local.account_vars.locals.aws_account_id
 }
 
 # Create a default provider (in the terragrunt cache folder for the module executed)
 #
 # Generate an AWS provider block
 generate "provider" {
+
   path      = "provider.tf"
+
   if_exists = "overwrite_terragrunt"
+
   contents  = <<EOF
 provider "aws" {
   region = "${local.aws_region}"
@@ -42,8 +50,22 @@ provider "aws" {
   # Only these AWS Account IDs may be operated on by this template
   allowed_account_ids = ["${local.account_id}"]
 }
-EOF
+
+provider "aws" {
+  alias = "requester"
+  region = "us-east-1"
 }
+provider "aws" {
+  alias = "accepter"
+  region = "us-east-2"
+}
+
+
+EOF
+
+
+}
+
 
 
 # Create a backend.tf file (in the folder where the module is executed)
@@ -68,7 +90,6 @@ remote_state {
 }
 
 
-
 # ---------------------------------------------------------------------------------------------------------------------
 # GLOBAL PARAMETERS
 # These variables apply to all configurations in this subfolder. These are automatically merged into the child
@@ -81,8 +102,9 @@ remote_state {
 # Configure root level variables that all resources can inherit. This is especially helpful with multi-account configs
 # where terraform_remote_state data sources are placed directly into the modules.
 inputs = merge(
+  { app_id = local.app_id },
+  local.cloud_vars.locals,
   local.account_vars.locals,
   local.region_vars.locals,
-  local.environment_vars.locals,
-  {app_id = local.app_id},
+  local.environment_vars.locals
 )

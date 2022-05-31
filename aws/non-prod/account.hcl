@@ -9,7 +9,7 @@
 # Set account-wide variables. These are automatically pulled in to configure the remote state bucket in the root
 # terragrunt.hcl configuration.
 locals {
-  account_name   = "non-prod"
+  #account_name   = "non-prod"
   aws_account_id = "792566780889"
   aws_profile    = "non-prod"
 }

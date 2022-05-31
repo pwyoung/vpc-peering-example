@@ -1,6 +1,18 @@
-D:=./aws/non-prod/us-east-1/Development/root
+.PHONY=default apply plan format FORCE
+
+D:=./aws/non-prod/Development
 
 # Just go into the directory specified in $D and run the given target
-%: FORCE
+
+default: plan
+
+apply: FORCE
 	cd $(D) && make $1
 
+plan: FORCE
+	cd $(D) && make $1
+
+format: FORCE
+	terraform fmt -recursive
+
+FORCE:
