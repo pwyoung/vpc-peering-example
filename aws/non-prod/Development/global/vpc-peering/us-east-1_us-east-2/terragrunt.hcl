@@ -1,13 +1,5 @@
-
-# dependencies {
-#   paths = [
-#   "../../us-east-1/vpc/",
-#   "../../us-east-2/vpc/",
-#   ]
-# }
-
 dependency "vpc_requester" {
-  config_path = "../../us-east-1/vpc"
+  config_path = "../../../us-east-1/vpc"
 
   mock_outputs = {
     vpc_id = "known after apply"
@@ -16,7 +8,7 @@ dependency "vpc_requester" {
 }
 
 dependency "vpc_accepter" {
-  config_path = "../../us-east-2/vpc"
+  config_path = "../../../us-east-2/vpc"
 
   mock_outputs = {
     vpc_id = "known after apply"
@@ -61,8 +53,10 @@ terraform {
 inputs = {
   owner = "pwy"
 
-  requester_vpc_id = dependency.vpc_requester.outputs.vpc_id
+  this_vpc_id = dependency.vpc_requester.outputs.vpc_id
+  this_vpc_region = "us-east-1"
 
-  accepter_vpc_id  = dependency.vpc_accepter.outputs.vpc_id
+  peer_vpc_id  = dependency.vpc_accepter.outputs.vpc_id
+  peer_vpc_region = "us-east-2"
 
 }

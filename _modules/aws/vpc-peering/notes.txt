@@ -1,0 +1,7 @@
+# Do not use cloudposse.
+https://github.com/cloudposse/terraform-aws-vpc-peering-multi-account/issues/8
+In particular, they are ignoring this fix to their problem.
+https://github.com/cloudposse/terraform-aws-vpc-peering-multi-account/issues/8#issuecomment-601722314
+
+# This is a good module, and sets up all routes
+https://github.com/grem11n/terraform-aws-vpc-peering

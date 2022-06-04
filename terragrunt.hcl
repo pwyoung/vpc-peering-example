@@ -51,16 +51,6 @@ provider "aws" {
   allowed_account_ids = ["${local.account_id}"]
 }
 
-provider "aws" {
-  alias = "requester"
-  region = "us-east-1"
-}
-provider "aws" {
-  alias = "accepter"
-  region = "us-east-2"
-}
-
-
 EOF
 
 
