@@ -1,21 +1,21 @@
 dependency "vpc_requester" {
   config_path = "../../../us-east-1/vpc"
 
-  mock_outputs = {
-    vpc_id = "known after apply"
-    private_route_table_id = "known after apply"
-  }
+  #mock_outputs = {
+  #  vpc_id = "known after apply"
+  #  private_route_table_id = "known after apply"
+  #}
 }
 
 dependency "vpc_accepter" {
   config_path = "../../../us-east-2/vpc"
 
-  mock_outputs = {
-    vpc_id = "known after apply"
-    vpc_owner_id = "known after apply"
-    vpc_region = "known after apply"
-    vpc_cidr_block = "known after apply"
-  }
+  #mock_outputs = {
+  #  vpc_id = "known after apply"
+  #  vpc_owner_id = "known after apply"
+  #  vpc_region = "known after apply"
+  #  vpc_cidr_block = "known after apply"
+  #}
 }
 
 # Include the top-level terragrunt.hcl file

@@ -3,6 +3,7 @@
 #   all the modules required to build the entire system.
 dependencies {
   paths = [
+    "../vpc-peering/us-east-1_us-east-2",
     "../../us-east-1/public_ec2_instances",
     "../../us-east-1/private_ec2_instances",
     "../../us-east-2/public_ec2_instances",

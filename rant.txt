@@ -1,0 +1,28 @@
+# RANT
+
+It took some testing and time to figure out the (known) problems (limitations)
+of terragrunt's "run-all" commands.
+The problems mostly arise when the commands are run non-interactively.
+
+What it comes down to is this...
+
+DESTROY:
+"terragrunt run-all destroy" works as expected.
+It finds all modules under the working directory and deletes them while (AFAIK) respecting dependency ordering.
+
+APPLY:
+"terragrunt run-all apply" ignores dependencies (unless you run it interactively)
+
+PLAN:
+"terragrunt run-all plan" does not work across dependent modules that have not been built yet.
+  Specifically, it does not give a recursive plan, showing what would happen if you were
+  to run TG Apply and interactively build all dependencies.
+  To be fair, it does work interactively, or when run against one module with no dependencies.
+Per https://terragrunt.gruntwork.io/docs/reference/cli-options/run-all,
+  "[WARNING] Using run-all with plan is currently broken for certain use cases"
+Issue comment (on 5/19):
+  https://github.com/gruntwork-io/terragrunt/issues/720#issuecomment-497888756
+
+The problem with "plan" is such that you can't use it non-interactively (with dependencies)
+except to confirm that your existing (just applied) infrastructure matches the desired state.
+
