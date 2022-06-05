@@ -1,14 +1,3 @@
-
-variable "this_vpc_id" {}
-variable "peer_vpc_id" {}
-
-variable "this_vpc_region" {}
-variable "peer_vpc_region" {}
-
-output "vpc_peering_accept_status" {
-  value = module.single_account_multi_region.vpc_peering_accept_status
-}
-
 provider "aws" {
   alias      = "this"
   region     = var.this_vpc_region
