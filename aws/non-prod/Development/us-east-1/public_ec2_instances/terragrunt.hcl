@@ -47,6 +47,16 @@ inputs = {
   #ec2_instance_type       = "t3.small"
   #ec2_image_name = "ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-*"
   ec2_instance_name_prefix = "pub-ec2"
+  # Allow HTTP to port 80 for testing
+  ingress_rules = [
+    "all-icmp",
+    "http-80-tcp"
+  ]
+  ec2_user_data = <<-EOT
+    #!/bin/bash
+    sudo apt update -y
+    sudo apt install -y postgresql-client htop iperf3 tree awscli mysql-client nfs-common redis-tools nginx
+EOT
 
   iam_instance_profile = dependency.public_ec2_instance_profile.outputs.ec2_instance_profile
 

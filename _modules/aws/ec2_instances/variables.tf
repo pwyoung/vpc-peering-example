@@ -52,9 +52,8 @@ variable "ec2_image_name" {
 variable "ec2_user_data" {
   default = <<-EOT
     #!/bin/bash
-    sudo apt update > /tmp/apt-update.log
-    sudo apt install -y postgresql-client htop iperf3 tree awscli mysql-client nfs-common redis-tools>\
- /tmp/apt-install.log
+    sudo apt update -y
+    sudo apt install -y postgresql-client htop iperf3 tree awscli mysql-client nfs-common redis-tools
 EOT
 }
 
@@ -74,14 +73,17 @@ variable "azs" {
 # EC2 Security Group Default rules
 
 variable "ingress_cidr_blocks" {
+  type = list(string)
   default = ["0.0.0.0/0"]
 }
 
 variable "ingress_rules" {
+  type = list(string)
   default = ["all-icmp"]
 }
 
 variable "egress_rules" {
+  type = list(string)
   default = ["all-all"]
 }
 
@@ -96,4 +98,3 @@ variable "iam_instance_profile" {
   type        = string
   description = "IAM Instance Profile to be applied to the EC2 instances"
 }
-
