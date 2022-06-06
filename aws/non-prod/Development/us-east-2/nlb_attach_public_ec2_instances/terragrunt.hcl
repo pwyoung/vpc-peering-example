@@ -48,5 +48,6 @@ inputs = {
   ec2_instance_ids = dependency.public_ec2_instances.outputs.ids
 
   ports = [80]
+  #ports = [80,443] # TODO: add HTTPS
 
 }

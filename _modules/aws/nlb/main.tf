@@ -17,19 +17,6 @@ locals {
         tcp_udp = true
       }
 
-      # Register specific targets
-      # https://github.com/terraform-aws-modules/terraform-aws-alb/blob/master/examples/complete-alb/main.tf#L389
-      #targets = {
-      #  my_ec2 = {
-      #    target_id = aws_instance.this.id
-      #    port      = 80
-      #  },
-      #  my_ec2_again = {
-      #    target_id = aws_instance.this.id
-      #    port      = 8080
-      #  }
-      #}
-
     },
     {
       name_prefix      = "u1-"
@@ -69,9 +56,7 @@ resource "aws_eip" "this" {
   vpc = true
 }
 
-##################################################################
-# Network Load Balancer with Elastic IPs attached
-##################################################################
+
 module "nlb" {
   # https://registry.terraform.io/modules/terraform-aws-modules/alb/aws
   source  = "terraform-aws-modules/alb/aws"

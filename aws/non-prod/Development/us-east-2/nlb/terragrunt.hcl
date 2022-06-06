@@ -24,7 +24,7 @@ terraform {
   #source = "${local.base_source_url}?ref=v0.7.0"
   #
   # Local module (for rapid dev)
-  source = "${dirname(find_in_parent_folders())}//_modules/aws/lb"
+  source = "${dirname(find_in_parent_folders())}//_modules/aws/nlb"
 }
 
 
@@ -42,6 +42,5 @@ inputs = {
   subnet_ids = dependency.vpc.outputs.public_subnets
 
   # https://github.com/terraform-aws-modules/terraform-aws-alb/blob/master/variables.tf#L25
-  enable_cross_zone_load_balancing = true
-
+  #enable_cross_zone_load_balancing = true # TODO: test this
 }
