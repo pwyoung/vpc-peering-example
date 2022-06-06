@@ -47,6 +47,6 @@ inputs = {
 
   ec2_instance_ids = dependency.public_ec2_instances.outputs.ids
 
-  ports = [22,80]
+  ports = [80]
 
 }
