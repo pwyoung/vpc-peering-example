@@ -82,8 +82,8 @@ module "ec2_instance" {
   instance_type          = var.ec2_instance_type
   key_name               = var.ec2_key_name
   vpc_security_group_ids = [module.ec2_security_group.security_group_id]
-  subnet_id              = element("${var.subnets}", count.index)
-  availability_zone      = element("${var.azs}", count.index)
+  subnet_id              = element("${var.subnets}", count.index % length("${var.subnets}") )
+  availability_zone      = element("${var.azs}", count.index % length("${var.subnets}") )
 
   iam_instance_profile = var.iam_instance_profile
 

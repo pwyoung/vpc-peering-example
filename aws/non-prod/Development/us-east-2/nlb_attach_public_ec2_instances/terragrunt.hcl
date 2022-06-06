@@ -1,14 +1,9 @@
-# GOAL
-#   Use the "dependencies" block to force creation of
-#   all the modules required to build the entire system.
-dependencies {
-  paths = [
-    "../vpc-peering/us-east-1_us-east-2",
-    "../../us-east-1/public_ec2_instances",
-    "../../us-east-1/private_ec2_instances",
-    "../../us-east-2/private_ec2_instances",
-    "../../us-east-2/nlb_attach_public_ec2_instances",
-  ]
+dependency "nlb" {
+  config_path = "../nlb"
+}
+
+dependency "public_ec2_instances" {
+  config_path = "../public_ec2_instances"
 }
 
 # Include the top-level terragrunt.hcl file
@@ -23,7 +18,7 @@ include "root" {
 
 # Set some parameters (inputs) for this module
 #include "main_module" {
-#  path = "${dirname(find_in_parent_folders())}/_env_common/aws/iam.hcl"
+#  path = "${dirname(find_in_parent_folders())}/_env_common/aws/network-load-balancer.hcl"
 #}
 
 
@@ -33,7 +28,7 @@ terraform {
   #source = "${local.base_source_url}?ref=v0.7.0"
   #
   # Local module (for rapid dev)
-  source = "${dirname(find_in_parent_folders())}//_modules/aws/main"
+  source = "${dirname(find_in_parent_folders())}//_modules/aws/lb_attach_ec2_instances"
 }
 
 
@@ -44,4 +39,14 @@ terraform {
 #
 # Extra/unused inputs are ignored since they're just passed as environment variables
 inputs = {
+  owner = "pwy"
+
+  # This is relying on the order of the target_group_arns being the same as input
+  # TODO: Change this to a robust mechanism
+  target_group_arn = dependency.nlb.outputs.target_group_arns[0]
+
+  ec2_instance_ids = dependency.public_ec2_instances.outputs.ids
+
+  ports = [22,80]
+
 }

@@ -9,3 +9,9 @@ output "private_ips" {
   description = "EC2 private IPs"
   value       = module.ec2_instance.*.private_ip
 }
+
+output "ids" {
+  description = "EC2 instance IDs"
+  value       = module.ec2_instance.*.id
+}
+
