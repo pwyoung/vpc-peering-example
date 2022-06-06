@@ -1,5 +1,9 @@
-dependency "vpc" {
-  config_path = "../vpc"
+dependency "nlb" {
+  config_path = "../nlb"
+}
+
+dependency "public_ec2_instances" {
+  config_path = "../ec2"
 }
 
 # Include the top-level terragrunt.hcl file
@@ -24,7 +28,7 @@ terraform {
   #source = "${local.base_source_url}?ref=v0.7.0"
   #
   # Local module (for rapid dev)
-  source = "${dirname(find_in_parent_folders())}//_modules/aws/nlb"
+  source = "${dirname(find_in_parent_folders())}//_modules/aws/lb_attach_ec2_instances"
 }
 
 
@@ -37,10 +41,13 @@ terraform {
 inputs = {
   owner = "pwy"
 
-  # https://github.com/terraform-aws-modules/terraform-aws-vpc/blob/master/outputs.tf
-  vpc_id  = dependency.vpc.outputs.vpc_id
-  subnet_ids = dependency.vpc.outputs.public_subnets
+  # This is relying on the order of the target_group_arns being the same as input
+  # TODO: Change this to a robust mechanism
+  target_group_arn = dependency.nlb.outputs.target_group_arns[0]
 
-  # https://github.com/terraform-aws-modules/terraform-aws-alb/blob/master/variables.tf#L25
-  #enable_cross_zone_load_balancing = true # TODO: test this
+  ec2_instance_ids = dependency.public_ec2_instances.outputs.ids
+
+  ports = [80]
+  #ports = [80,443] # TODO: add HTTPS
+
 }

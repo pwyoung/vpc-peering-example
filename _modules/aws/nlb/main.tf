@@ -16,7 +16,6 @@ locals {
       tags = {
         tcp_udp = true
       }
-
     },
     {
       name_prefix      = "u1-"

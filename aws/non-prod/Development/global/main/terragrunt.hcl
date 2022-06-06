@@ -6,6 +6,8 @@ dependencies {
     "../../us-east-1/pub/ec2",
     "../../us-east-1/prv/ec2",
     "../../global/vpc-peering/us-east-1_us-east-2",
+    "../../us-east-1/pub/nlb",
+    "../../us-east-1/pub/nlb_attach_public_ec2_instances",
   ]
 }
 
