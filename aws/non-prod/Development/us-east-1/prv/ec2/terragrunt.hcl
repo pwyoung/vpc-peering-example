@@ -2,8 +2,8 @@ dependency "vpc" {
   config_path = "../../vpc"
 }
 
-dependency "public_ec2_instance_profile" {
-  config_path = "../../../global/iam/public_ec2_instance_profile"
+dependency "private_ec2_instance_profile" {
+  config_path = "../../../global/iam/private_ec2_instance_profile"
 }
 
 dependency "sg" {
@@ -34,6 +34,9 @@ include "envcommon" {
 
 # Include our module by dynamically create some terraform code here.
 terraform {
+  #source = "${include.envcommon.locals.base_source_url}?ref=v0.7.0"
+  #source = "${include.envcommon.locals.base_source_url}"
+
   source = "${dirname(find_in_parent_folders())}//_modules/aws/ec2_instances"
 }
 
@@ -46,11 +49,11 @@ terraform {
 # Extra/unused inputs are ignored since they're just passed as environment variables
 inputs = {
 
-  # PUBLIC
-  subnets = dependency.vpc.outputs.public_subnets
-  iam_instance_profile = dependency.public_ec2_instance_profile.outputs.ec2_instance_profile
+  # PRIVATE
+  subnets = dependency.vpc.outputs.private_subnets
+  iam_instance_profile = dependency.private_ec2_instance_profile.outputs.ec2_instance_profile
 
-  number_of_ec2_instances = 4
+  number_of_ec2_instances = 1
   ec2_key_name            = "tardis"
   owner = "pwy"
 
@@ -63,6 +66,5 @@ inputs = {
 #   ec2_instance_name_prefix
 #   ec2_instance_type
 #   ec2_user_data
-
 
 }

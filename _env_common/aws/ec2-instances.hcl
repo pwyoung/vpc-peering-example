@@ -19,7 +19,7 @@ locals {
 #   These are essentially defaults as they can be overridden in the module/caller's terragrunt.hcl
 inputs = {
 
-  prefix_name = "${local.app_id}-${local.env}-${local.aws_region}-${local.scope}"
+  ec2_instance_name_prefix = "${local.app_id}-${local.env}-${local.aws_region}-${local.scope}"
 
   ec2_instance_type       = "t3.small"
 
@@ -28,6 +28,5 @@ inputs = {
     sudo apt update -y
     sudo apt install -y postgresql-client htop iperf3 tree awscli mysql-client nfs-common redis-tools nginx
 EOT
-
 
 }

@@ -45,7 +45,7 @@ RANT=../../../rant.txt
 default: build
 
 # Standard "make" targets (for convenience)
-build: graph
+build: validate
 clean: destroy
 
 # This forces a target to run even if there is a file in the local dir with the
@@ -71,10 +71,8 @@ validate: apply
 plan: FORCE
 	if [ -f $(RANT) ]; then cat $(RANT); fi
 
-graph: validate
-	$(GRAPH)
-
 destroy: FORCE
 	$(DESTROY)
 
-
+graph: validate
+	$(GRAPH)
