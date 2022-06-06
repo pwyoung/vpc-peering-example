@@ -42,9 +42,11 @@ variable "private_subnets" {
 
 variable "single_nat_gateway" {
   type = string
+  description = "Should be true if you want to provision a single shared NAT Gateway across all of your private networks"
 }
 
 variable "enable_nat_gateway" {
   type = string
+  description = "Should be true if you want to provision NAT Gateways for each of your private networks"
 }
 

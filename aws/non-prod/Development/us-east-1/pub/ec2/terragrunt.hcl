@@ -1,9 +1,17 @@
 dependency "vpc" {
-  config_path = "../vpc"
+  config_path = "../../vpc"
 }
 
 dependency "public_ec2_instance_profile" {
-  config_path = "../../global/iam/public_ec2_instance_profile"
+  config_path = "../../../global/iam/public_ec2_instance_profile"
+}
+
+dependency "sg" {
+  config_path = "../sg"
+}
+
+dependency "ami" {
+  config_path = "../ami"
 }
 
 
@@ -17,18 +25,18 @@ include "root" {
 }
 
 
-# Set some common parameters (inputs) for this module
-#include "aws_vpc" {
-#  path = "${dirname(find_in_parent_folders())}/_env_common/aws/vpc.hcl"
-#}
+include "envcommon" {
+  path = "${dirname(find_in_parent_folders())}/_env_common/aws/ec2-instances.hcl"
+
+  expose = true
+}
 
 
 # Include our module by dynamically create some terraform code here.
 terraform {
-  # Keep this as a reminder to move to git-based modules
-  #source = "${local.base_source_url}?ref=v0.7.0"
-  #
-  # Local module (for rapid dev)
+  #source = "${include.envcommon.locals.base_source_url}?ref=v0.7.0"
+  #source = "${include.envcommon.locals.base_source_url}"
+
   source = "${dirname(find_in_parent_folders())}//_modules/aws/ec2_instances"
 }
 
@@ -40,27 +48,28 @@ terraform {
 #
 # Extra/unused inputs are ignored since they're just passed as environment variables
 inputs = {
-  owner = "pwy"
+
+  # PUBLIC
+  subnets = dependency.vpc.outputs.public_subnets
+  iam_instance_profile = dependency.public_ec2_instance_profile.outputs.ec2_instance_profile
 
   number_of_ec2_instances = 4
   ec2_key_name            = "tardis"
-  #ec2_instance_type       = "t3.small"
-  #ec2_image_name = "ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-*"
   ec2_instance_name_prefix = "pub-ec2"
-  # Allow HTTP to port 80 for testing
-  ingress_rules = [
-    "all-icmp",
-    "http-80-tcp"
-  ]
-  ec2_user_data = <<-EOT
-    #!/bin/bash
-    sudo apt update -y
-    sudo apt install -y postgresql-client htop iperf3 tree awscli mysql-client nfs-common redis-tools nginx
-EOT
-
-  iam_instance_profile = dependency.public_ec2_instance_profile.outputs.ec2_instance_profile
+  owner = "pwy"
 
   vpc_id  = dependency.vpc.outputs.vpc_id
-  subnets = dependency.vpc.outputs.public_subnets
   azs     = dependency.vpc.outputs.azs
+  ami     = dependency.ami.outputs.ami
+  security_group_id = dependency.sg.outputs.security_group_id
+
+# Defaults
+#   ec2_instance_type       = "t3.small"
+#   ec2_user_data = <<-EOT
+#     #!/bin/bash
+#     sudo apt update -y
+#     sudo apt install -y postgresql-client htop iperf3 tree awscli mysql-client nfs-common redis-tools nginx
+# EOT
+
+
 }

@@ -41,20 +41,9 @@ inputs = {
   public_subnets  = ["10.1.101.0/24", "10.1.102.0/24", "10.1.103.0/24"]
   private_subnets = ["10.1.1.0/24", "10.1.2.0/24", "10.1.3.0/24"]
 
-  enable_nat_gateway = false
-
-  # For DEV (to save money during testing)
-  # ONE NAT Gateway (in the first public subnet, not in each of them)
-  single_nat_gateway = true
-
-  number_of_public_ec2_instances = 1
-  public_ec2_key_name            = "tardis"
-  public_ec2_instance_type       = "t3.medium"
-  public_ec2_image_name          = "ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-*"
-
-  number_of_private_ec2_instances = 0
-  private_ec2_key_name            = "tardis"
-  private_ec2_instance_type       = "t3.medium"
-  private_ec2_image_name          = "ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-*"
+  # Private Network - NAT-GATEWAYS
+  # For DEV (to save money during testing) skip private instances and NAT Gateway
+  enable_nat_gateway = false  # false -> no NAT Gateway at all
+  single_nat_gateway = true  # true -> one NAT in the first pub subnet (not in each subnet)
 
 }
