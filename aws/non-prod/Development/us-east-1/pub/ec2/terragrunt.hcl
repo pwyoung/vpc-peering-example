@@ -51,8 +51,10 @@ inputs = {
   iam_instance_profile = dependency.public_ec2_instance_profile.outputs.ec2_instance_profile
 
   number_of_ec2_instances = 4
-  ec2_key_name            = "tardis"
-  owner = "pwy"
+
+  # Specify these in ./*.auto.tfvars
+  ec2_key_name            = "CHANGEME"
+  owner = "CHANGEME"
 
   vpc_id  = dependency.vpc.outputs.vpc_id
   azs     = dependency.vpc.outputs.azs
