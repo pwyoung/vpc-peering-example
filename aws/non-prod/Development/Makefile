@@ -34,11 +34,16 @@ GRAPH=terragrunt graph-dependencies | dot -Tsvg > ~/tf-dependencies.svg
 # It finds and destroys modules, respecting dependencies.
 DESTROY=terragrunt run-all destroy --terragrunt-non-interactive
 
+# Destroy the given module
+DESTROY_MOD=terragrunt destroy -auto-approve
+
 # This will fetch the latest module source.
 # This is necessary if the module source or location has changed.
 UPDATE=terragrunt run-all get -update
 
 RANT=../../../rant.txt
+
+MAKEFILE_PATH=$(dir $(realpath $(firstword $(MAKEFILE_LIST))))
 
 # The first target will be called by 'make' with no args.
 # Name it 'default' for readability.
@@ -71,8 +76,15 @@ validate: apply
 plan: FORCE
 	if [ -f $(RANT) ]; then cat $(RANT); fi
 
+# Destroy all modules found under this directory
 destroy: FORCE
 	$(DESTROY)
+	echo "Check for orphaned resources like Elastic IPs"
 
 graph: validate
 	$(GRAPH)
+
+# Destroy the modules, one at a time
+destroy-mods: FORCE
+	for i in `find ./ -name "terragrunt.hcl" | grep -v terragrunt-cache | sed 's|/terragrunt.hcl||' | sort -u | grep -v ./global/main`; do cd $(MAKEFILE_PATH)/$$i && pwd && $(DESTROY_MOD); done
+
