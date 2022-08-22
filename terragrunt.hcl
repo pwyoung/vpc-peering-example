@@ -11,7 +11,7 @@ locals {
   #
   # This must be a globally unique name since it is used to name
   # the S3 bucket and DynamoDB table that manages Terraform state for this app.
-  app_id = "pwyvpcpeeringtest"
+  app_id = "pwy-vpc-peering-test-20220822"
 
   # Environment variables
   environment_vars = read_terragrunt_config(find_in_parent_folders("env.hcl"))
